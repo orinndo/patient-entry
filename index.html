@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>患者入室（Patient Entry）音声ガイド</title>
+  <style>
+    :root{--border:#e6e6e6;--muted:#666;}
+    body{font-family:system-ui,-apple-system,"Hiragino Sans",sans-serif;margin:16px;line-height:1.35;}
+    h2{margin:0 0 8px 0;}
+    .note{color:var(--muted);font-size:12px;margin:0 0 14px 0;}
+    .card{border:1px solid var(--border);border-radius:12px;padding:14px;max-width:900px;}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    select{font-size:16px;padding:10px 12px;min-width:280px;flex:1;}
+    button{font-size:16px;padding:10px 14px;border:1px solid var(--border);background:#fff;border-radius:10px;}
+    button:active{transform:scale(0.99);}
+    button[disabled]{opacity:0.4;}
+    .label{font-size:12px;color:var(--muted);margin-top:12px;}
+    .jp{font-size:20px;font-weight:700;margin:6px 0 12px 0;}
+    .en{font-size:18px;margin:6px 0 0 0;}
+    .controls{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;}
+    audio{width:100%;margin-top:8px;}
+    .status{font-size:12px;color:var(--muted);}
+    .hint{font-size:12px;color:var(--muted);margin-top:10px;}
+    .pill{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--muted);}
+  </style>
+</head>
+<body>
+  <h2>患者入室（Patient Entry）音声ガイド</h2>
+  <p class="note">※ iPhone/iPad/Androidで再生できます。自動再生は端末側で制限されるため、最初は「再生」を押してください。</p>
+
+  <div class="card">
+    <div class="row">
+      <div class="pill">ステップ選択</div>
+      <select id="stepSelect" aria-label="Step select">
+        <option value="01">01. Our interpreter has already left for the day, so I&#x27;ll explain using an English guide.</option>
+<option value="02">02. Please let me know if anything is unclear.</option>
+<option value="03">03. Could you tell me your date of birth?</option>
+<option value="04">04. Do you have any heart devices in your chest, like a pacemaker, ICD, or CRT?</option>
+<option value="05">05. Please sit on the bed and take off your shoes.</option>
+<option value="06">06. Please lie on your back on the bed.</option>
+<option value="07">07. Your head goes here, and your feet go there.</option>
+<option value="08">08. Please stand up slowly and sit on the bed.</option>
+<option value="09">09. I&#x27;ll put a slide board behind your back.</option>
+<option value="10">10. Let me slide you onto the bed now.</option>
+<option value="11">11. Please slide up a little.</option>
+<option value="12">12. Please slide down a little.</option>
+<option value="13">13. I&#x27;ll slide you up a little.</option>
+<option value="14">14. I&#x27;ll slide you down a little.</option>
+<option value="15">15. Is your neck comfortable?</option>
+<option value="16">16. Is it not too high or low?</option>
+<option value="17">17. The bed will move now, so please stay still.</option>
+      </select>
+      <button id="prevBtn">← 前</button>
+      <button id="nextBtn">次 →</button>
+    </div>
+
+    <div class="label">日本語（内容）</div>
+    <div class="jp" id="jpText"></div>
+
+    <div class="label">English (Script)</div>
+    <div class="en" id="enText"></div>
+
+    <div class="controls">
+      <button id="playBtn">▶︎ 再生 / Play</button>
+      <button id="pauseBtn">⏸ 一時停止 / Pause</button>
+      <button id="replayBtn">↻ もう一度 / Replay</button>
+      <span class="status" id="status">待機中 / Ready</span>
+    </div>
+
+    <audio id="player" controls playsinline preload="none"></audio>
+    <div class="hint">再生できない場合：端末の消音モード解除、音量、Bluetooth接続を確認してください。</div>
+  </div>
+
+<script>
+  const STEPS = [{"id": "01", "jp": "本日の通訳はすでに退勤していますので、英語のガイドを使って説明します。", "en": "Our interpreter has already left for the day, so I'll explain using an English guide.", "audio": "audio/step_01.m4a"}, {"id": "02", "jp": "分からないことがあれば、いつでも言ってください。", "en": "Please let me know if anything is unclear.", "audio": "audio/step_02.m4a"}, {"id": "03", "jp": "生年月日を教えていただけますか？", "en": "Could you tell me your date of birth?", "audio": "audio/step_03.m4a"}, {"id": "04", "jp": "胸にペースメーカー、ICD、CRTなどの心臓デバイスは入っていますか？", "en": "Do you have any heart devices in your chest, like a pacemaker, ICD, or CRT?", "audio": "audio/step_04.m4a"}, {"id": "05", "jp": "ベッドに座って、靴を脱いでください。", "en": "Please sit on the bed and take off your shoes.", "audio": "audio/step_05.m4a"}, {"id": "06", "jp": "ベッドに仰向けで寝てください。", "en": "Please lie on your back on the bed.", "audio": "audio/step_06.m4a"}, {"id": "07", "jp": "頭はここ、足はあちらです。", "en": "Your head goes here, and your feet go there.", "audio": "audio/step_07.m4a"}, {"id": "08", "jp": "ゆっくり立ち上がって、ベッドに座ってください。", "en": "Please stand up slowly and sit on the bed.", "audio": "audio/step_08.m4a"}, {"id": "09", "jp": "背中の後ろにスライドボードを入れますね。", "en": "I'll put a slide board behind your back.", "audio": "audio/step_09.m4a"}, {"id": "10", "jp": "これからベッドに移りますね。", "en": "Let me slide you onto the bed now.", "audio": "audio/step_10.m4a"}, {"id": "11", "jp": "少し上にずれてください。", "en": "Please slide up a little.", "audio": "audio/step_11.m4a"}, {"id": "12", "jp": "少し下にずれてください。", "en": "Please slide down a little.", "audio": "audio/step_12.m4a"}, {"id": "13", "jp": "少し上に移動しますね。", "en": "I'll slide you up a little.", "audio": "audio/step_13.m4a"}, {"id": "14", "jp": "少し下に移動しますね。", "en": "I'll slide you down a little.", "audio": "audio/step_14.m4a"}, {"id": "15", "jp": "首はつらくないですか？", "en": "Is your neck comfortable?", "audio": "audio/step_15.m4a"}, {"id": "16", "jp": "高すぎたり低すぎたりしませんか？", "en": "Is it not too high or low?", "audio": "audio/step_16.m4a"}, {"id": "17", "jp": "ベッドが動きますので、動かないでください。", "en": "The bed will move now, so please stay still.", "audio": "audio/step_17.m4a"}];
+  const sel = document.getElementById('stepSelect');
+  const jpText = document.getElementById('jpText');
+  const enText = document.getElementById('enText');
+  const player = document.getElementById('player');
+  const statusEl = document.getElementById('status');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const playBtn = document.getElementById('playBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const replayBtn = document.getElementById('replayBtn');
+
+  function setStatus(s){ statusEl.textContent = s; }
+  function getIndexById(id){ return STEPS.findIndex(s => s.id === id); }
+
+  function loadStepByIndex(i){
+    if(i < 0) i = 0;
+    if(i >= STEPS.length) i = STEPS.length - 1;
+    const step = STEPS[i];
+    sel.value = step.id;
+    jpText.textContent = step.jp || "";
+    enText.textContent = step.en || "";
+    player.src = step.audio;
+    player.currentTime = 0;
+    setStatus('待機中 / Ready');
+    prevBtn.disabled = (i === 0);
+    nextBtn.disabled = (i === STEPS.length - 1);
+  }
+
+  sel.addEventListener('change', () => loadStepByIndex(getIndexById(sel.value)));
+  prevBtn.addEventListener('click', () => loadStepByIndex(getIndexById(sel.value) - 1));
+  nextBtn.addEventListener('click', () => loadStepByIndex(getIndexById(sel.value) + 1));
+
+  playBtn.addEventListener('click', async () => {
+    try { await player.play(); } catch(e) {
+      alert('再生できませんでした。音量/消音モード/ブラウザ設定を確認してください。');
+    }
+  });
+
+  pauseBtn.addEventListener('click', () => player.pause());
+
+  replayBtn.addEventListener('click', async () => {
+    try { player.currentTime = 0; await player.play(); } catch(e) {
+      alert('再生できませんでした。');
+    }
+  });
+
+  player.addEventListener('play', () => setStatus('再生中 / Playing'));
+  player.addEventListener('pause', () => setStatus('一時停止 / Paused'));
+  player.addEventListener('ended', () => setStatus('待機中 / Ready'));
+
+  loadStepByIndex(0);
+</script>
+</body>
+</html>
