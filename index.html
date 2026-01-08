@@ -1,130 +1,238 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>患者入室（Patient Entry）音声ガイド</title>
-  <style>
-    :root{--border:#e6e6e6;--muted:#666;}
-    body{font-family:system-ui,-apple-system,"Hiragino Sans",sans-serif;margin:16px;line-height:1.35;}
-    h2{margin:0 0 8px 0;}
-    .note{color:var(--muted);font-size:12px;margin:0 0 14px 0;}
-    .card{border:1px solid var(--border);border-radius:12px;padding:14px;max-width:900px;}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
-    select{font-size:16px;padding:10px 12px;min-width:280px;flex:1;}
-    button{font-size:16px;padding:10px 14px;border:1px solid var(--border);background:#fff;border-radius:10px;}
-    button:active{transform:scale(0.99);}
-    button[disabled]{opacity:0.4;}
-    .label{font-size:12px;color:var(--muted);margin-top:12px;}
-    .jp{font-size:20px;font-weight:700;margin:6px 0 12px 0;}
-    .en{font-size:18px;margin:6px 0 0 0;}
-    .controls{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;}
-    audio{width:100%;margin-top:8px;}
-    .status{font-size:12px;color:var(--muted);}
-    .hint{font-size:12px;color:var(--muted);margin-top:10px;}
-    .pill{display:inline-block;padding:4px 8px;border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--muted);}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>患者入室 (Patient Entry) 音声ガイド</title>
+<style>
+  :root {
+    --border:#d9d9d9;
+    --muted:#666;
+    --btn:#eef3ff;
+    --btn2:#f3f3f3;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Segoe UI", sans-serif;
+    margin: 18px;
+    line-height: 1.6;
+    background: #fff;
+    color: #111;
+  }
+  h1 {
+    margin: 0 0 6px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
+  .note {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .panel {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    max-width: 900px;
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(0,0,0,.02);
+  }
+  .chip {
+    display:inline-block;
+    background:#f5f5f5;
+    color:#333;
+    border:1px solid #ededed;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .row {
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  select {
+    flex: 1 1 420px;
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fff;
+  }
+  .navbtn {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-size: 14px;
+  }
+  .navbtn:disabled {
+    opacity: .45;
+  }
+  .sectionlabel {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .jp {
+    margin-top: 6px;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .en {
+    margin-top: 6px;
+    font-size: 18px;
+  }
+  .controls {
+    margin-top: 10px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .btn {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    background: #fff;
+    font-size: 15px;
+    min-width: 140px;
+  }
+  .btn.primary {
+    background: var(--btn);
+    border-color: #d7e4ff;
+    color: #0b3d91;
+  }
+  .btn.gray {
+    background: var(--btn2);
+  }
+  .status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  audio {
+    margin-top: 10px;
+    width: 100%;
+  }
+  .foot {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+</style>
 </head>
 <body>
-  <h2>患者入室（Patient Entry）音声ガイド</h2>
-  <p class="note">※ iPhone/iPad/Androidで再生できます。自動再生は端末側で制限されるため、最初は「再生」を押してください。</p>
+  <h1>患者入室 (Patient Entry) 音声ガイド</h1>
+  <p class="note">※必ず GitHub Pages（https://○○.github.io/...）のURLで開いてください。iPhoneでは自動再生できないため、下の再生ボタンを押してください。</p>
 
-  <div class="card">
+  <div class="panel">
+    <div class="chip">ステップ選択</div>
+
     <div class="row">
-      <div class="pill">ステップ選択</div>
-      <select id="stepSelect" aria-label="Step select">
-        <option value="01">01. Our interpreter has already left for the day, so I&#x27;ll explain using an English guide.</option>
-<option value="02">02. Please let me know if anything is unclear.</option>
-<option value="03">03. Could you tell me your date of birth?</option>
-<option value="04">04. Do you have any heart devices in your chest, like a pacemaker, ICD, or CRT?</option>
-<option value="05">05. Please sit on the bed and take off your shoes.</option>
-<option value="06">06. Please lie on your back on the bed.</option>
-<option value="07">07. Your head goes here, and your feet go there.</option>
-<option value="08">08. Please stand up slowly and sit on the bed.</option>
-<option value="09">09. I&#x27;ll put a slide board behind your back.</option>
-<option value="10">10. Let me slide you onto the bed now.</option>
-<option value="11">11. Please slide up a little.</option>
-<option value="12">12. Please slide down a little.</option>
-<option value="13">13. I&#x27;ll slide you up a little.</option>
-<option value="14">14. I&#x27;ll slide you down a little.</option>
-<option value="15">15. Is your neck comfortable?</option>
-<option value="16">16. Is it not too high or low?</option>
-<option value="17">17. The bed will move now, so please stay still.</option>
-      </select>
-      <button id="prevBtn">← 前</button>
-      <button id="nextBtn">次 →</button>
+      <select id="stepSelect" aria-label="ステップ選択"></select>
+      <button class="navbtn" id="prevBtn" type="button">← 前</button>
+      <button class="navbtn" id="nextBtn" type="button">次 →</button>
     </div>
 
-    <div class="label">日本語（内容）</div>
-    <div class="jp" id="jpText"></div>
+    <div class="sectionlabel">日本語（内容）</div>
+    <div id="jp" class="jp">—</div>
 
-    <div class="label">English (Script)</div>
-    <div class="en" id="enText"></div>
+    <div class="sectionlabel">English（Script）</div>
+    <div id="en" class="en">—</div>
 
     <div class="controls">
-      <button id="playBtn">▶︎ 再生 / Play</button>
-      <button id="pauseBtn">⏸ 一時停止 / Pause</button>
-      <button id="replayBtn">↻ もう一度 / Replay</button>
-      <span class="status" id="status">待機中 / Ready</span>
+      <button class="btn primary" id="playBtn" type="button">▶ 再生 / Play</button>
+      <button class="btn gray" id="pauseBtn" type="button">⏸ 一時停止 / Pause</button>
+      <button class="btn" id="replayBtn" type="button">↺ もう一度 / Replay</button>
     </div>
 
-    <audio id="player" controls playsinline preload="none"></audio>
-    <div class="hint">再生できない場合：端末の消音モード解除、音量、Bluetooth接続を確認してください。</div>
+    <div class="status" id="status">待機中 / Ready</div>
+    <audio id="audio" controls preload="none"></audio>
+    <div class="foot">再生されない場合は、下のコントロール（▶）からも再生できます。</div>
   </div>
 
 <script>
-  const STEPS = [{"id": "01", "jp": "本日の通訳はすでに退勤していますので、英語のガイドを使って説明します。", "en": "Our interpreter has already left for the day, so I'll explain using an English guide.", "audio": "audio/step_01.m4a"}, {"id": "02", "jp": "分からないことがあれば、いつでも言ってください。", "en": "Please let me know if anything is unclear.", "audio": "audio/step_02.m4a"}, {"id": "03", "jp": "生年月日を教えていただけますか？", "en": "Could you tell me your date of birth?", "audio": "audio/step_03.m4a"}, {"id": "04", "jp": "胸にペースメーカー、ICD、CRTなどの心臓デバイスは入っていますか？", "en": "Do you have any heart devices in your chest, like a pacemaker, ICD, or CRT?", "audio": "audio/step_04.m4a"}, {"id": "05", "jp": "ベッドに座って、靴を脱いでください。", "en": "Please sit on the bed and take off your shoes.", "audio": "audio/step_05.m4a"}, {"id": "06", "jp": "ベッドに仰向けで寝てください。", "en": "Please lie on your back on the bed.", "audio": "audio/step_06.m4a"}, {"id": "07", "jp": "頭はここ、足はあちらです。", "en": "Your head goes here, and your feet go there.", "audio": "audio/step_07.m4a"}, {"id": "08", "jp": "ゆっくり立ち上がって、ベッドに座ってください。", "en": "Please stand up slowly and sit on the bed.", "audio": "audio/step_08.m4a"}, {"id": "09", "jp": "背中の後ろにスライドボードを入れますね。", "en": "I'll put a slide board behind your back.", "audio": "audio/step_09.m4a"}, {"id": "10", "jp": "これからベッドに移りますね。", "en": "Let me slide you onto the bed now.", "audio": "audio/step_10.m4a"}, {"id": "11", "jp": "少し上にずれてください。", "en": "Please slide up a little.", "audio": "audio/step_11.m4a"}, {"id": "12", "jp": "少し下にずれてください。", "en": "Please slide down a little.", "audio": "audio/step_12.m4a"}, {"id": "13", "jp": "少し上に移動しますね。", "en": "I'll slide you up a little.", "audio": "audio/step_13.m4a"}, {"id": "14", "jp": "少し下に移動しますね。", "en": "I'll slide you down a little.", "audio": "audio/step_14.m4a"}, {"id": "15", "jp": "首はつらくないですか？", "en": "Is your neck comfortable?", "audio": "audio/step_15.m4a"}, {"id": "16", "jp": "高すぎたり低すぎたりしませんか？", "en": "Is it not too high or low?", "audio": "audio/step_16.m4a"}, {"id": "17", "jp": "ベッドが動きますので、動かないでください。", "en": "The bed will move now, so please stay still.", "audio": "audio/step_17.m4a"}];
-  const sel = document.getElementById('stepSelect');
-  const jpText = document.getElementById('jpText');
-  const enText = document.getElementById('enText');
-  const player = document.getElementById('player');
-  const statusEl = document.getElementById('status');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
-  const playBtn = document.getElementById('playBtn');
-  const pauseBtn = document.getElementById('pauseBtn');
-  const replayBtn = document.getElementById('replayBtn');
+const STEPS = [{"num": "01", "title_jp": "通訳が本日は不在のため、英語ガイドを使ってご説明します。", "jp": "通訳が本日は不在のため、英語ガイドを使ってご説明します。", "en": "Our interpreter has already left for the day, so I’ll explain using an English guide."}, {"num": "02", "title_jp": "わからないことがあれば、いつでもお知らせください。", "jp": "わからないことがあれば、いつでもお知らせください。", "en": "Please let me know if anything is unclear."}, {"num": "03", "title_jp": "生年月日を教えてください。", "jp": "生年月日を教えてください。", "en": "Could you tell me your date of birth?"}, {"num": "04", "title_jp": "胸にペースメーカー、ICD、CRTなどの心臓デバイスは入っていますか？", "jp": "胸にペースメーカー、ICD、CRTなどの心臓デバイスは入っていますか？", "en": "Do you have any heart devices in your chest, like a pacemaker, ICD, or CRT?"}, {"num": "05", "title_jp": "ベッドに腰かけて、靴を脱いでください。", "jp": "ベッドに腰かけて、靴を脱いでください。", "en": "Please sit on the bed and take off your shoes."}, {"num": "06", "title_jp": "ベッドに仰向けに寝てください。", "jp": "ベッドに仰向けに寝てください。", "en": "Please lie on your back on the bed."}, {"num": "07", "title_jp": "頭はこちら、足はあちらです。", "jp": "頭はこちら、足はあちらです。", "en": "Your head goes here, and your feet go there."}, {"num": "08", "title_jp": "ゆっくり立ち上がって、ベッドに腰かけてください。", "jp": "ゆっくり立ち上がって、ベッドに腰かけてください。", "en": "Please stand up slowly and sit on the bed."}, {"num": "09", "title_jp": "背中の下にスライドボードを入れます。", "jp": "背中の下にスライドボードを入れます。", "en": "I’ll put a slide board behind your back."}, {"num": "10", "title_jp": "これからベッドの上に移動しますね。", "jp": "これからベッドの上に移動しますね。", "en": "Let me slide you onto the bed now."}, {"num": "11", "title_jp": "少し上にずれてください。", "jp": "少し上にずれてください。", "en": "Please slide up a little."}, {"num": "12", "title_jp": "少し下にずれてください。", "jp": "少し下にずれてください。", "en": "Please slide down a little."}, {"num": "13", "title_jp": "少し上に動かしますね。", "jp": "少し上に動かしますね。", "en": "I’ll slide you up a little."}, {"num": "14", "title_jp": "少し下に動かしますね。", "jp": "少し下に動かしますね。", "en": "I’ll slide you down a little."}, {"num": "15", "title_jp": "首は楽ですか？", "jp": "首は楽ですか？", "en": "Is your neck comfortable?"}, {"num": "16", "title_jp": "高すぎたり低すぎたりしませんか？", "jp": "高すぎたり低すぎたりしませんか？", "en": "Is it not too high or low?"}, {"num": "17", "title_jp": "これからベッドが動きますので、動かないでください。", "jp": "これからベッドが動きますので、動かないでください。", "en": "The bed will move now, so please stay still."}];
 
-  function setStatus(s){ statusEl.textContent = s; }
-  function getIndexById(id){ return STEPS.findIndex(s => s.id === id); }
+let currentIndex = 0;
+const sel = document.getElementById('stepSelect');
+const jp = document.getElementById('jp');
+const en = document.getElementById('en');
+const audio = document.getElementById('audio');
+const statusEl = document.getElementById('status');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
 
-  function loadStepByIndex(i){
-    if(i < 0) i = 0;
-    if(i >= STEPS.length) i = STEPS.length - 1;
-    const step = STEPS[i];
-    sel.value = step.id;
-    jpText.textContent = step.jp || "";
-    enText.textContent = step.en || "";
-    player.src = step.audio;
-    player.currentTime = 0;
-    setStatus('待機中 / Ready');
-    prevBtn.disabled = (i === 0);
-    nextBtn.disabled = (i === STEPS.length - 1);
-  }
+function setStatus(t) {
+  statusEl.textContent = t;
+}
 
-  sel.addEventListener('change', () => loadStepByIndex(getIndexById(sel.value)));
-  prevBtn.addEventListener('click', () => loadStepByIndex(getIndexById(sel.value) - 1));
-  nextBtn.addEventListener('click', () => loadStepByIndex(getIndexById(sel.value) + 1));
-
-  playBtn.addEventListener('click', async () => {
-    try { await player.play(); } catch(e) {
-      alert('再生できませんでした。音量/消音モード/ブラウザ設定を確認してください。');
-    }
+function buildSelect() {
+  sel.innerHTML = '';
+  STEPS.forEach((s, i) => {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = `${s.num}. ${s.title_jp}`;
+    sel.appendChild(opt);
   });
+}
 
-  pauseBtn.addEventListener('click', () => player.pause());
+function updateNavButtons() {
+  prevBtn.disabled = (currentIndex === 0);
+  nextBtn.disabled = (currentIndex === STEPS.length - 1);
+}
 
-  replayBtn.addEventListener('click', async () => {
-    try { player.currentTime = 0; await player.play(); } catch(e) {
-      alert('再生できませんでした。');
-    }
-  });
+function loadStep(i) {
+  currentIndex = i;
+  sel.value = String(i);
+  jp.textContent = STEPS[i].jp;
+  en.textContent = STEPS[i].en;
 
-  player.addEventListener('play', () => setStatus('再生中 / Playing'));
-  player.addEventListener('pause', () => setStatus('一時停止 / Paused'));
-  player.addEventListener('ended', () => setStatus('待機中 / Ready'));
+  const num = STEPS[i].num;
 
-  loadStepByIndex(0);
+  audio.pause();
+  audio.innerHTML = '';
+
+  // Android優先: mp3 → iPhone/Safari用: m4a
+  const s1 = document.createElement('source');
+  s1.src = `audio/${num}.mp3`;
+  s1.type = 'audio/mpeg';
+  const s2 = document.createElement('source');
+  s2.src = `audio/${num}.m4a`;
+  s2.type = 'audio/mp4';
+  audio.appendChild(s1);
+  audio.appendChild(s2);
+
+  audio.load();
+  setStatus('待機中 / Ready');
+  updateNavButtons();
+}
+
+document.getElementById('playBtn').addEventListener('click', () => {
+  audio.play().then(()=>setStatus('再生中 / Playing'))
+    .catch(()=>setStatus('再生ボタンをもう一度押してください / Tap Play again'));
+});
+document.getElementById('pauseBtn').addEventListener('click', () => {
+  audio.pause();
+  setStatus('一時停止 / Paused');
+});
+document.getElementById('replayBtn').addEventListener('click', () => {
+  audio.currentTime = 0;
+  audio.play().then(()=>setStatus('再生中 / Playing'))
+    .catch(()=>setStatus('再生ボタンをもう一度押してください / Tap Play again'));
+});
+
+sel.addEventListener('change', (e) => loadStep(Number(e.target.value)));
+prevBtn.addEventListener('click', () => { if (currentIndex > 0) loadStep(currentIndex - 1); });
+nextBtn.addEventListener('click', () => { if (currentIndex < STEPS.length - 1) loadStep(currentIndex + 1); });
+
+audio.addEventListener('ended', () => setStatus('完了 / Done'));
+audio.addEventListener('play', () => setStatus('再生中 / Playing'));
+
+buildSelect();
+loadStep(0);
 </script>
 </body>
 </html>
